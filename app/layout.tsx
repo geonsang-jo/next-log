@@ -13,10 +13,6 @@ export const metadata: Metadata = {
   description: "A blog about web development and other stuff",
 };
 
-export function generateStaticParams() {
-  return i18nConfig.locales.map((locale) => ({ locale }));
-}
-
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const { resources, i18n } = await initTranslations();
   const detectedLanguage =
