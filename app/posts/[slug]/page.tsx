@@ -3,31 +3,23 @@ import { cookies } from "next/headers";
 import dayjs from "dayjs";
 
 import { getPostBySlug, getAllPosts } from "~utils/posts";
-import markdownToHtml from "~core/blog/markdownToHtml";
+import { MdxRenderer } from "~components/mdx/MdxRenderer";
 
 import { Post } from "../../../types/post";
 import i18nConfig from "../../../next-i18next.config";
 
-const getPost = async (
-  slug: string | undefined,
-  lang: string
-): Promise<Post> => {
+const getPost = (slug: string | undefined, lang: string): Post => {
   if (!slug || typeof slug !== "string") {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const post: Post = getPostBySlug(slug, lang);
-  const mdxSource = await markdownToHtml(post.content);
-
-  return {
-    ...{ ...post, content: mdxSource },
-  };
+  return getPostBySlug(slug, lang);
 };
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
   const cookieStore = cookies();
   const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
-  const post = await getPost(params.slug, lang);
+  const post = getPost(params.slug, lang);
 
   const fomattedDate = (date: string) => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
@@ -65,7 +57,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
             />
           </div>
           <hr className="border-1 w-4/12 m-auto mb-20" />
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <MdxRenderer source={post.content} />
         </div>
       </article>
     </>
@@ -80,7 +72,7 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const cookieStore = cookies();
   const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
-  const post = await getPost(params.slug, lang);
+  const post = getPost(params.slug, lang);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:4000";
 
   const ogImageUrl = `${siteUrl}/api/og/${
