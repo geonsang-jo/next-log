@@ -30,7 +30,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
   return (
     <>
       <article className="prose dark:prose-invert max-w-none prose-pre:rounded-[9px] my-16">
-        <div className="max-w-[1000px] m-auto text-center">
+        <div className="max-w-[1000px] m-auto text-center px-4 md:px-0">
           <h1>{post.metadata.title}</h1>
           {post.metadata.thumbnail && (
             <Image
@@ -47,7 +47,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
             {post.metadata.category} | {fomattedDate(post.metadata.date)}
           </p>
         </div>
-        <div className="max-w-[800px] m-auto">
+        <div className="max-w-[800px] m-auto px-4 md:px-0">
           <div className="flex-col my-12">
             <h3
               dangerouslySetInnerHTML={{ __html: post.metadata.introTitle }}
