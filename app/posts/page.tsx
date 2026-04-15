@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,6 +7,15 @@ import { Post } from "~types/post";
 import { getAllPosts } from "~utils/posts";
 import i18nConfig from "../../next-i18next.config";
 import { Skeleton } from "~components/ui/skeleton";
+
+export const metadata: Metadata = {
+  title: "Posts",
+  description: "웹 개발과 기술에 대한 글 모음",
+  openGraph: {
+    title: "Posts | Geon log",
+    description: "웹 개발과 기술에 대한 글 모음",
+  },
+};
 
 const getPosts = async (): Promise<Post[]> => {
   const cookieStore = cookies();
