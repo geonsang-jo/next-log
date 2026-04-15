@@ -28,13 +28,13 @@ function NavToggles() {
 
   return (
     <nav className="flex items-center">
-      <Link href={"https://github.com/Jogeonsang"} target="_blank" passHref>
+      <Link href={"https://github.com/geonsang-jo"} target="_blank" passHref>
         <Button variant="ghost" className="w-9 shrink-0 px-0">
           <GithubIcon className="h-4 w-4" />
         </Button>
       </Link>
       <Link
-        href={"https://www.linkedin.com/in/geonsan-jo-5a570612b/"}
+        href={"https://www.linkedin.com/in/geonsang-jo-5a570612b/"}
         target="_blank"
         passHref
       >

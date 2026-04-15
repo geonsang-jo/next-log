@@ -28,11 +28,11 @@ function NavSheet() {
             <div className="flex flex-col space-y-3">
               <Link href="/article">Article</Link>
               <Link href="/resume">Resume</Link>
-              <Link href="https://github.com/Jogeonsang" target="_blank">
+              <Link href="https://github.com/geonsang-jo" target="_blank">
                 GitHub
               </Link>
               <Link
-                href={"https://www.linkedin.com/in/geonsan-jo-5a570612b/"}
+                href={"https://www.linkedin.com/in/geonsang-jo-5a570612b/"}
                 target="_blank"
               >
                 LinkdeIn
