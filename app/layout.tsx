@@ -9,7 +9,7 @@ import initTranslations from "../i18n";
 import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Marcus log",
+  title: "Geon log",
   description: "A blog about web development and other stuff",
 };
 
