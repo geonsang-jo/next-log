@@ -32,10 +32,6 @@ export const metadata: Metadata = {
   },
 };
 
-export function generateStaticParams() {
-  return i18nConfig.locales.map((locale) => ({ locale }));
-}
-
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const { resources, i18n } = await initTranslations();
   const detectedLanguage =
