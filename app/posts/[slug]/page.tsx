@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: Props) {
     description: post.metadata.introDesc,
     authors: {
       name: "Geon",
-      url: "https://marcus-log/resume",
+      url: "https://geon-log.dev/resume",
     },
     openGraph: {
       images: post.metadata.thumbnail || ogImageUrl,
