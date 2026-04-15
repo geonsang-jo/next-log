@@ -9,8 +9,27 @@ import initTranslations from "../i18n";
 import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "Marcus log",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz"
+  ),
+  title: {
+    default: "Geon log",
+    template: "%s | Geon log",
+  },
   description: "A blog about web development and other stuff",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "/",
+    siteName: "Geon log",
+    title: "Geon log",
+    description: "A blog about web development and other stuff",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Geon log",
+    description: "A blog about web development and other stuff",
+  },
 };
 
 export function generateStaticParams() {

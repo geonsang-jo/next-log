@@ -20,6 +20,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
   const cookieStore = cookies();
   const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
   const post = getPost(params.slug, lang);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
 
   const fomattedDate = (date: string) => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
@@ -27,8 +28,26 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
     return lang === "kr" ? formattedDateKr : formattedDateEn;
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.metadata.title,
+    description: post.metadata.description,
+    datePublished: new Date(post.metadata.date).toISOString(),
+    author: {
+      "@type": "Person",
+      name: "Geon",
+      url: `${siteUrl}/resume`,
+    },
+    url: `${siteUrl}/posts/${post.slug}`,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="prose dark:prose-invert max-w-none prose-pre:rounded-[9px] my-16">
         <div className="max-w-[1000px] m-auto text-center">
           <h1>{post.metadata.title}</h1>
@@ -73,25 +92,45 @@ export async function generateMetadata({ params }: Props) {
   const cookieStore = cookies();
   const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
   const post = getPost(params.slug, lang);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:4000";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
 
-  const ogImageUrl = `${siteUrl}/api/og/${
-    params.slug
-  }?title=${encodeURIComponent(
-    post.metadata.title
-  )}&description=${encodeURIComponent(post.metadata.description)}`;
+  const ogImageUrl = post.metadata.thumbnail
+    ? `${siteUrl}/posts/${params.slug}/${post.metadata.thumbnail}`
+    : `${siteUrl}/api/og/${params.slug}?title=${encodeURIComponent(
+        post.metadata.title
+      )}&description=${encodeURIComponent(post.metadata.description)}`;
 
   return {
     title: post.metadata.title,
-    description: post.metadata.introDesc,
+    description: post.metadata.description,
     authors: {
       name: "Geon",
-      url: "https://marcus-log/resume",
+      url: `${siteUrl}/resume`,
+    },
+    alternates: {
+      canonical: `/posts/${params.slug}`,
     },
     openGraph: {
-      images: post.metadata.thumbnail || ogImageUrl,
+      type: "article",
       title: post.metadata.title,
-      description: post.metadata.introDesc,
+      description: post.metadata.description,
+      url: `/posts/${params.slug}`,
+      publishedTime: new Date(post.metadata.date).toISOString(),
+      authors: ["Geon"],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.metadata.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.metadata.title,
+      description: post.metadata.description,
+      images: [ogImageUrl],
     },
   };
 }
