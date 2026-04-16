@@ -40,7 +40,7 @@ Let me share what problem we hit in each Phase and why we made the choices we ma
 
   The result: **cost explosion**. When a PR changed dozens of files, running a review across all of them blew up the API bill.
 
-  This is where the first core design decision came out: **triage (pre-classification)**. A lightweight model (Haiku) first judges "does this file need a review?" based on a simple rationale, and only the files that need it get a detailed review — a two-stage structure.
+  This is where the first core design decision came out: **triage (pre-classification)**. A lightweight model (Haiku) first decides whether a file needs reviewing, based on a simple rationale, and only the files that need it get a detailed review — a two-stage structure.
 
   > You shouldn't start with "review everything." You start with <strong>"decide what to review."</strong> Triage was decisive not only for cost, but also for reducing noise.
 
@@ -100,7 +100,7 @@ Let me share what problem we hit in each Phase and why we made the choices we ma
 
   **2nd pass — PR author role.** A model of the same caliber now swaps roles. "You are now the author of this PR. When you receive these comments, would you feel they're helpful?" From that perspective it evaluates each of the 1st-pass comments one by one and filters out the ones with no value.
 
-  The key here is the **few-shot examples**. We collected data on how teammates actually reacted to bot comments (thumbs up / thumbs down) and pass it to the validator as examples of "this kind of comment got a good reaction / this kind of comment got a bad reaction." The model then judges based on **the team's actual preferences**, not abstract rules.
+  The key here is the **few-shot examples**. We collect data on how teammates actually react to bot comments (thumbs up / thumbs down) and pass it to the validator as examples of "this kind of comment got a good reaction / this kind of comment got a bad reaction." The model then judges based on **the team's actual preferences**, not abstract rules.
 
   On top of that, the validator does post-processing: converting imperative phrasing into questions ("Do X" → "Is there a reason you did X?"), capping comments at seven max, and keeping only the single most important one among similar comments.
 
