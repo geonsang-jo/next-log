@@ -7,6 +7,7 @@ export type PostMetadata = {
   introTitle: string;
   introDesc: string;
   category: string;
+  highlightWord?: string;
 };
 
 export type Post = {
