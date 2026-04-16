@@ -1,6 +1,5 @@
 "use client";
 
-import SearchCommand from "./searchCommand";
 import NavToggles from "./toggle";
 import PageNav from "./nav";
 
@@ -12,7 +11,6 @@ function Header() {
           <PageNav />
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <SearchCommand />
           <NavToggles />
         </div>
       </div>
