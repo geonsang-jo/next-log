@@ -25,7 +25,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
   const fomattedDate = (date: string) => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
     const formattedDateEn = dayjs(date).format("MMMM DD, YYYY");
-    return lang === "kr" ? formattedDateKr : formattedDateEn;
+    return lang === "ko" ? formattedDateKr : formattedDateEn;
   };
 
   const jsonLd = {

@@ -35,7 +35,7 @@ const Article = async () => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
     const formattedDateEn = dayjs(date).format("MMMM DD, YYYY");
 
-    return lang === "kr" ? formattedDateKr : formattedDateEn;
+    return lang === "ko" ? formattedDateKr : formattedDateEn;
   };
   return (
     <section className="flex pt-12 pb-14 w-[900px] m-auto">
