@@ -8,12 +8,6 @@ module.exports = withMDX({
   pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   reactStrictMode: true,
   async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/posts",
-        permanent: true,
-      },
-    ];
+    return [];
   },
 });
