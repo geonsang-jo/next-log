@@ -1,6 +1,7 @@
 import "~styles/globals.css";
 
 import { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import Header from "~components/header";
 import ThemeProvider from "~styles/themeProvider";
 import i18nConfig from "../next-i18next.config";
@@ -51,6 +52,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
             </div>
           </ThemeProvider>
         </TranslationProvider>
+        <Analytics />
       </body>
     </html>
   );
