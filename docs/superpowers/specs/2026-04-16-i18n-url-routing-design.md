@@ -58,7 +58,7 @@ Restructure the blog's internationalization from cookie-based language switching
 All content URLs include the locale segment.
 
 ```
-/                                → 302 redirect to /ko/posts or /en/posts
+/                                → 307 redirect to /ko/posts or /en/posts
 /ko/posts                        → Korean post list
 /en/posts                        → English post list
 /ko/posts/[slug]                 → Korean post detail
@@ -272,7 +272,7 @@ Removed: `js-cookie` import, `Cookies.set`, `window.location.reload`.
 2. `app/page.tsx` runs as Server Component
 3. `headers().get("accept-language")` returns the header string
 4. Logic: `startsWith("ko")` → `/ko/posts`, else `/en/posts`
-5. `redirect()` throws a Next.js internal redirect → browser receives 302 → navigates to `/en/posts`
+5. `redirect()` throws a Next.js internal redirect → browser receives 307 → navigates to `/en/posts`
 
 ### Request to `/ko/posts/ai-review-bot-evolution`
 
