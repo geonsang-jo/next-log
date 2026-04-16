@@ -37,7 +37,7 @@ function NavSheet() {
           </SheetTitle>
           <SheetDescription className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
             <div className="flex flex-col space-y-3">
-              <Link href={`/${lang}/posts`}>Article</Link>
+              <Link href={`/${lang}/posts`}>Posts</Link>
               <Link href={`/${lang}/resume`}>Resume</Link>
               <Link href="https://github.com/geonsang-jo" target="_blank">
                 GitHub
