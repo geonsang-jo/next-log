@@ -13,31 +13,59 @@ async function loadFonts() {
   return { bold, regular };
 }
 
-function renderTitle(title: string, highlightWord?: string) {
-  if (!highlightWord || !title.includes(highlightWord)) {
-    return (
-      <span style={{ color: "#1a1a1a" }}>{title}</span>
-    );
+function renderDots() {
+  const dots = [];
+  const cols = 24;
+  const rows = 12;
+  const spacingX = 50;
+  const spacingY = 52;
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      dots.push(
+        <div
+          key={`${row}-${col}`}
+          style={{
+            position: "absolute",
+            left: col * spacingX + 25,
+            top: row * spacingY + 15,
+            width: 3,
+            height: 3,
+            borderRadius: "50%",
+            background: "rgba(0, 0, 0, 0.12)",
+          }}
+        />
+      );
+    }
+  }
+  return dots;
+}
+
+function renderTitle(title: string, highlightWords?: string) {
+  if (!highlightWords) {
+    return title;
   }
 
-  const idx = title.indexOf(highlightWord);
-  const before = title.slice(0, idx);
-  const after = title.slice(idx + highlightWord.length);
+  const words = highlightWords.split(",").map((w) => w.trim()).filter(Boolean);
+  const pattern = words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+  const regex = new RegExp(`(${pattern})`, "g");
+  const parts = title.split(regex);
 
-  return (
-    <span style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", whiteSpace: "pre" }}>
-      {before && <span style={{ color: "#1a1a1a" }}>{before}</span>}
+  return parts.map((part, i) =>
+    words.includes(part) ? (
       <span
+        key={i}
         style={{
           background: "linear-gradient(90deg, #7b5ea7, #9f6ba0, #d47a8c)",
           backgroundClip: "text",
           color: "transparent",
         }}
       >
-        {highlightWord}
+        {part}
       </span>
-      {after && <span style={{ color: "#1a1a1a" }}>{after}</span>}
-    </span>
+    ) : (
+      <span key={i} style={{ color: "#1a1a1a" }}>{part}</span>
+    )
   );
 }
 
@@ -65,6 +93,7 @@ export async function GET(req: NextRequest) {
             fontFamily: "Pretendard",
           }}
         >
+          {renderDots()}
           <div
             style={{
               display: "flex",
@@ -78,6 +107,7 @@ export async function GET(req: NextRequest) {
               maxWidth: "1000px",
               padding: "0 60px",
               letterSpacing: "-1px",
+              wordBreak: "keep-all",
             }}
           >
             {renderTitle(title, highlightWord)}
