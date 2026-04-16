@@ -12,9 +12,6 @@ export async function generateStaticParams() {
   return SUPPORTED_LOCALES.map((lang) => ({ lang }));
 }
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
-
 export async function generateMetadata({
   params,
 }: {
