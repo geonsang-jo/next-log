@@ -30,6 +30,9 @@ export const metadata: Metadata = {
     title: "Geon log",
     description: "A blog about web development and other stuff",
   },
+  verification: {
+    google: "IvtO23xqXBRCTsg8vvSstjRpZT-bQJ-6Z5620rO6gHU",
+  },
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
