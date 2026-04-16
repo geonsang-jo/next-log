@@ -38,7 +38,7 @@ const LanguageSwitcher = () => {
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Button variant={"ghost"} onClick={() => changeLanguage("kr")}>
+          <Button variant={"ghost"} onClick={() => changeLanguage("ko")}>
             한국어
           </Button>
         </DropdownMenuItem>
