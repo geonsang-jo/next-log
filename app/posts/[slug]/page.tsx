@@ -94,11 +94,14 @@ export async function generateMetadata({ params }: Props) {
   const post = getPost(params.slug, lang);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
 
+  const highlightParam = post.metadata.highlightWord
+    ? `&highlightWord=${encodeURIComponent(post.metadata.highlightWord)}`
+    : "";
   const ogImageUrl = post.metadata.thumbnail
     ? `${siteUrl}/posts/${params.slug}/${post.metadata.thumbnail}`
     : `${siteUrl}/api/og/${params.slug}?title=${encodeURIComponent(
         post.metadata.title
-      )}&description=${encodeURIComponent(post.metadata.description)}`;
+      )}${highlightParam}`;
 
   return {
     title: post.metadata.title,
