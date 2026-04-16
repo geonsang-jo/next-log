@@ -152,15 +152,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@formatjs/intl-localematcher@npm:^0.6.2":
-  version: 0.6.2
-  resolution: "@formatjs/intl-localematcher@npm:0.6.2"
-  dependencies:
-    tslib: "npm:^2.8.0"
-  checksum: 10c0/22a17a4c67160b6c9f52667914acfb7b79cd6d80630d4ac6d4599ce447cb89d2a64f7d58fa35c3145ddb37fef893f0a45b9a55e663a4eb1f2ae8b10a89fac235
-  languageName: node
-  linkType: hard
-
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.3
   resolution: "@gar/promise-retry@npm:1.0.3"
@@ -1632,13 +1623,6 @@ __metadata:
   dependencies:
     "@types/unist": "npm:*"
   checksum: 10c0/3249781a511b38f1d330fd1e3344eed3c4e7ea8eff82e835d35da78e637480d36fad37a78be5a7aed8465d237ad0446abc1150859d0fde395354ea634decf9f7
-  languageName: node
-  linkType: hard
-
-"@types/js-cookie@npm:^3.0.6":
-  version: 3.0.6
-  resolution: "@types/js-cookie@npm:3.0.6"
-  checksum: 10c0/173afaf5ea9d86c22395b9d2a00b6adb0006dcfef165d6dcb0395cdc32f5a5dcf9c3c60f97194119963a15849b8f85121e1ae730b03e40bc0c29b84396ba22f9
   languageName: node
   linkType: hard
 
@@ -5216,15 +5200,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next-browser-languagedetector@npm:^8.0.0":
-  version: 8.2.1
-  resolution: "i18next-browser-languagedetector@npm:8.2.1"
-  dependencies:
-    "@babel/runtime": "npm:^7.23.2"
-  checksum: 10c0/d200847a79b4cb2764ef59b33e5399085d4d56b2b038e884bb54fffe17953b467899142a6ef6e985592234f10049d14d06b80f2c56441ae80648c5a6717704f3
-  languageName: node
-  linkType: hard
-
 "i18next-resources-to-backend@npm:^1.2.1":
   version: 1.2.1
   resolution: "i18next-resources-to-backend@npm:1.2.1"
@@ -5772,13 +5747,6 @@ __metadata:
   bin:
     jiti: bin/jiti.js
   checksum: 10c0/77b61989c758ff32407cdae8ddc77f85e18e1a13fc4977110dbd2e05fc761842f5f71bce684d9a01316e1c4263971315a111385759951080bbfe17cbb5de8f7a
-  languageName: node
-  linkType: hard
-
-"js-cookie@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "js-cookie@npm:3.0.5"
-  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
   languageName: node
   linkType: hard
 
@@ -7739,21 +7707,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-i18n-router@npm:^5.5.0":
-  version: 5.5.7
-  resolution: "next-i18n-router@npm:5.5.7"
-  dependencies:
-    "@formatjs/intl-localematcher": "npm:^0.6.2"
-    negotiator: "npm:^1.0.0"
-  peerDependencies:
-    next: ^13 || ^14 || ^15 || ^16
-  peerDependenciesMeta:
-    next:
-      optional: false
-  checksum: 10c0/8c0dfbe9cc0eea45b627e3eee2f2a0c94ae3954b38392f7cc6ff8d798d12a6458da6c7cdee1ee62a814ac7d84ef7f48ddbd1a6922a2920aeb72caf7b414ecd9c
-  languageName: node
-  linkType: hard
-
 "next-log@workspace:.":
   version: 0.0.0-use.local
   resolution: "next-log@workspace:."
@@ -7766,7 +7719,6 @@ __metadata:
     "@radix-ui/react-dropdown-menu": "npm:^2.0.6"
     "@radix-ui/react-slot": "npm:^1.0.2"
     "@tailwindcss/typography": "npm:^0.5.10"
-    "@types/js-cookie": "npm:^3.0.6"
     "@types/node": "npm:20.5.9"
     "@types/react": "npm:18.2.21"
     "@types/react-dom": "npm:18.2.7"
@@ -7781,13 +7733,10 @@ __metadata:
     eslint-config-next: "npm:^14.1.3"
     gray-matter: "npm:^4.0.3"
     i18next: "npm:^23.11.5"
-    i18next-browser-languagedetector: "npm:^8.0.0"
     i18next-resources-to-backend: "npm:^1.2.1"
-    js-cookie: "npm:^3.0.5"
     lucide-react: "npm:^0.279.0"
     next: "npm:^14.1.4"
     next-compose-plugins: "npm:^2.2.1"
-    next-i18n-router: "npm:^5.5.0"
     next-mdx-remote: "npm:^6.0.0"
     next-themes: "npm:^0.3.0"
     nextra: "npm:^2.13.2"
@@ -10171,7 +10120,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.8.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
