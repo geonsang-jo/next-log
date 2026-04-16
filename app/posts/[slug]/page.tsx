@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import dayjs from "dayjs";
 
 import { getPostBySlug, getAllPosts } from "~utils/posts";
@@ -10,10 +11,11 @@ import i18nConfig from "../../../next-i18next.config";
 
 const getPost = (slug: string | undefined, lang: string): Post => {
   if (!slug || typeof slug !== "string") {
-    throw new Response("Not Found", { status: 404 });
+    notFound();
   }
-
-  return getPostBySlug(slug, lang);
+  const post = getPostBySlug(slug, lang);
+  if (!post) notFound();
+  return post;
 };
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
