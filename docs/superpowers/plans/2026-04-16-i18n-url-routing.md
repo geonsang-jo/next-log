@@ -696,7 +696,6 @@ export async function generateMetadata({
       type: "website",
       locale: ogLocale,
       alternateLocale: ogAlternate,
-      url: `${SITE_URL}/${lang}`,
       siteName: "Geon log",
       title: "Geon log",
       description,
@@ -1791,11 +1790,35 @@ Current target file has English frontmatter but Korean body. Completely overwrit
 
 ## Translation rules
 
-[same as Subagent A — duplicate the 9 rules above]
+1. Preserve the frontmatter structure. Translate values of `title`, `description`, `introTitle`, `introDesc`, `category` to English. Keep `date`, `tags`, `published` unchanged in value (just translate tag strings where natural).
+
+2. Preserve all heading levels (##, ###, etc.) and their order.
+
+3. Preserve all code blocks VERBATIM. Do not translate any line of code. You may translate single-line comments inside code blocks if they clarify meaning to English readers.
+
+4. Preserve all inline code spans (backtick syntax), all links (`[text](url)`), and all images.
+
+5. Preserve the author's voice: this is a first-person narrative retrospective about a mentoring side project (Clelab/Lubycon). Keep sentences personal and reflective, not marketing-speak.
+
+6. Match the tone of the four existing English posts at:
+   - /Users/marcus/.superset/worktrees/next-log/held-study/app/posts/journey-zustand/index.en.mdx
+   - /Users/marcus/.superset/worktrees/next-log/held-study/app/posts/future-oriented-frontend-architecture/index.en.mdx
+   - /Users/marcus/.superset/worktrees/next-log/held-study/app/posts/migrating-react-to-nextjs/index.en.mdx
+   - /Users/marcus/.superset/worktrees/next-log/held-study/app/posts/type-safe-and-reliable/index.en.mdx
+   Read at least one of these to calibrate tone and heading capitalization conventions.
+
+7. Terms/names: proper nouns like "Clelab", "Lubycon", "Wanted-Insight" stay as-is. For technical terms with common English equivalents, use the standard translation and keep it consistent throughout the file.
+
+8. Do NOT add content the Korean original does not have. Do NOT remove sections the Korean original does have.
+
+9. Output only the full MDX file contents written to the target path. No commentary.
 
 ## Deliverable
 
-[same as Subagent A]
+Write the translated file to the target path and return a brief summary (3 lines) of:
+- Number of sections translated
+- Any sentences where you picked an interpretation that a human may want to reconsider
+- Any technical terms you chose that may have better alternatives
 ```
 
 - [ ] **Step 2: Wait for both subagents to complete**
