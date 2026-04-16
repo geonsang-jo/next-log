@@ -146,8 +146,8 @@ public/
     en/common.json                ← unchanged
   posts/                          ← unchanged (post assets)
 
-posts/*/index.ko.mdx              ← renamed from index.kr.mdx (6 files)
-posts/*/index.en.mdx              ← unchanged for 4 posts;
+app/posts/*/index.ko.mdx          ← renamed from index.kr.mdx (6 files)
+app/posts/*/index.en.mdx          ← unchanged for 4 posts;
                                     rewritten for ai-review-bot-evolution;
                                     rewritten for 클랩&루비콘회고
 ```
@@ -157,7 +157,10 @@ posts/*/index.en.mdx              ← unchanged for 4 posts;
 - `middleware.js` — entire file
 - All `js-cookie` usage in `LangController` and elsewhere
 - All `Cookies.set("lang", ...)` calls
-- `next-i18n-router` dependency (unused)
+- npm dependencies removed from `package.json`:
+  - `next-i18n-router` (unused)
+  - `js-cookie` and `@types/js-cookie` (no longer used after cookie removal)
+  - `i18next-browser-languagedetector` (dead code once URL-based detection replaces cookie/navigator)
 
 ### Configuration Changes
 
@@ -169,6 +172,8 @@ const i18nConfig = {
 };
 module.exports = i18nConfig;
 ```
+
+**`metadataBase` location:** The `metadataBase: new URL(...)` currently lives in `app/layout.tsx`'s `metadata` export. After the split, `app/layout.tsx` keeps only the `metadataBase` + global defaults (e.g., `verification`, `twitter.card` fallback). Locale-specific fields (`title.default`, `description`, `openGraph.locale`, `openGraph.url`) move to `app/[lang]/layout.tsx`. This way, `metadataBase` applies uniformly and the per-locale OG fields override/extend it.
 
 **`i18n.ts`:**
 - Remove cookie/navigator-based language detection
@@ -190,18 +195,23 @@ export default function RootPage() {
 }
 ```
 
-Returns 302 redirect. No rendering. Runs only for path `/`.
+Returns a 307 (temporary, method-preserving) redirect via `next/navigation`'s `redirect()`. No rendering. Runs only for path `/`. Verification steps should expect any `30x` status (307 specifically).
 
 ### `app/[lang]/layout.tsx`
 
 Takes over locale-specific responsibilities from the previous root layout:
 - `<html lang={params.lang}>`
-- Validate `params.lang` is one of `"ko" | "en"`; otherwise 404
+- Validate `params.lang` is one of `"ko" | "en"`; invalid → `notFound()`
+- Export `generateStaticParams` returning `[{ lang: "ko" }, { lang: "en" }]` so the dynamic segment is statically generable
 - `initTranslations(params.lang)` and wrap in `TranslationProvider`
 - Generate per-locale OG metadata:
   - `ko`: `og:locale = ko_KR`, `og:locale:alternate = en_US`
   - `en`: `og:locale = en_US`, `og:locale:alternate = ko_KR`
 - Use the existing `Header` component (modified to consume `lang` prop)
+
+### `app/not-found.tsx`
+
+Add a minimal 404 page so `notFound()` calls in `[lang]/layout.tsx` render cleanly. Can be a simple text page ("Not Found" / translated based on detectable context, but static text is fine).
 
 ### `app/[lang]/posts/[slug]/page.tsx`
 
@@ -218,10 +228,14 @@ Takes over locale-specific responsibilities from the previous root layout:
 
 ### `app/utils/posts.ts`
 
+Current behavior: `getPostBySlug` uses `fs.readFileSync` which crashes on missing files. The `throw new Response("Not Found", ...)` lives in the page wrapper (`app/posts/[slug]/page.tsx`), not in this util.
+
 Changes:
-- `getPostBySlug(slug, lang)`: returns `null` when the file does not exist (was: `throw new Response("Not Found", ...)`)
+- `getPostBySlug(slug, lang)`: returns `null` when the corresponding MDX file does not exist on disk (check with `fs.existsSync` before reading)
 - `getAllPosts(lang)`: filters out posts lacking the given locale
 - New: `getAvailableLocales(slug): ("ko" | "en")[]` — used by hreflang generator, sitemap generator, and language switcher
+
+The page wrapper's throw is replaced by `notFound()` from `next/navigation` when `getPostBySlug` returns null.
 
 ### `LangController` component
 
@@ -386,9 +400,9 @@ Two independent translation tasks dispatched via parallel subagents during the i
 
 ### Local Dev (`yarn dev`)
 
-- `/` with browser language EN → 302 to `/en/posts`
-- `/` with browser language KO (via DevTools) → 302 to `/ko/posts`
-- `/` with browser language other (e.g., FR) → 302 to `/en/posts`
+- `/` with browser language EN → 307 to `/en/posts`
+- `/` with browser language KO (via DevTools) → 307 to `/ko/posts`
+- `/` with browser language other (e.g., FR) → 307 to `/en/posts`
 - `/ko/posts/ai-review-bot-evolution` renders Korean body
 - `/en/posts/ai-review-bot-evolution` renders English body (after translation)
 - `/fr/posts/anything` → 404
@@ -404,11 +418,11 @@ Two independent translation tasks dispatched via parallel subagents during the i
 
 ### Production (post-deploy)
 
-- `curl -H "Accept-Language: en" https://if-geon.xyz/` → 302 to `/en/posts`
-- `curl -H "Accept-Language: ko" https://if-geon.xyz/` → 302 to `/ko/posts`
+- `curl -H "Accept-Language: en" https://if-geon.xyz/` → 307 to `/en/posts`
+- `curl -H "Accept-Language: ko" https://if-geon.xyz/` → 307 to `/ko/posts`
 - `curl -I https://if-geon.xyz/en/posts/ai-review-bot-evolution` → 200
 - Google Search Console:
-  - Submit existing `sitemap.xml` (contains both locales)
+  - Sitemap URL is unchanged (`/sitemap.xml`); its contents now include both locales. No resubmission required unless GSC shows a stale fetch.
   - After a few days, verify indexed URLs include both `/ko/` and `/en/` paths
   - Check for hreflang errors (if any) in the International Targeting report
 - Social preview (Twitter/Facebook debugger) shows correct locale-specific OG
