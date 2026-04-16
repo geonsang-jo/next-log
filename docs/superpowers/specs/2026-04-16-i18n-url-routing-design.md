@@ -388,7 +388,28 @@ Two independent translation tasks dispatched via parallel subagents during the i
 - Target: `app/posts/클랩&루비콘회고/index.en.mdx` (replaces current mixed-language file)
 - Frontmatter title should be translated (e.g., "Retrospective on Clelab & Lubycon")
 
-**Human review gate:** After translations complete, the user reviews both files for tone/nuance corrections before merging to main. This gate exists because translation of personal/narrative content benefits from the author's direct editing.
+**Self-review gates (main session, before human review):** After both translation subagents complete, the main session performs two rounds of review on each translated file before handing off to the human. Each pass has a distinct focus to avoid "review fatigue" and catch different classes of issues.
+
+**Review Pass 1 — Accuracy & Fidelity:**
+- Diff the English output against the Korean source section by section
+- Verify every heading, bullet, code block, and link in the Korean source has a corresponding counterpart in the English output (no silent omissions)
+- Confirm technical terms are translated consistently across the file (e.g., if `렌더링` is rendered as "rendering" in one paragraph, it stays "rendering" throughout — not alternated with "draw" or "paint")
+- Confirm code block contents are verbatim (untranslated); only code-internal comments may be translated
+- Confirm frontmatter fields (`title`, `description`, `introTitle`, `introDesc`, `category`) are all present and translated; dates, tags, and `published` flags unchanged
+- Flag any passages where the English seems to paraphrase/expand beyond the Korean source (translation should not invent claims)
+
+Output: a short report per file listing any fixes needed; the main session applies fixes directly before Pass 2.
+
+**Review Pass 2 — Tone & Readability:**
+- Read the English output as an English-first reader (pretend the Korean source does not exist)
+- Check: does it flow naturally? Are sentences a reasonable length? Does it sound like the tone of the 4 already-translated posts (`journey-zustand`, `future-oriented-frontend-architecture`, `migrating-react-to-nextjs`, `type-safe-and-reliable`)?
+- Flag awkward literal translations (e.g., "~라고 할 수 있다" rendered as "can be said to be" instead of the more natural "is" / "amounts to")
+- Flag Korean idioms translated literally (e.g., proverbs, culturally-specific expressions) — suggest either a natural English equivalent or a brief inline gloss
+- Confirm heading capitalization style matches existing English posts (title case vs sentence case — check existing posts for the convention)
+
+Output: a short report per file; main session applies fixes.
+
+**Human review gate (final):** After the two self-review passes, the user reviews both files for tone/nuance corrections specific to the author's voice before merging to main. This final gate exists because translation of personal/narrative content benefits from the author's direct editing — the two automated passes catch mechanical/consistency issues but cannot substitute for the author's sense of their own writing voice.
 
 ## Verification
 
@@ -443,8 +464,10 @@ This section is a hint for the subsequent `writing-plans` phase; the plan itself
 10. Update `LangController` to URL-based switching
 11. Update navigation links in `Header`/`Nav` to include locale prefix
 12. (Parallel) Dispatch translation subagents for `ai-review-bot-evolution` and `클랩&루비콘회고`
-13. Human review of translations
-14. Run verification steps
+13. Self-review Pass 1 (accuracy & fidelity) on both translated files; apply fixes
+14. Self-review Pass 2 (tone & readability) on both translated files; apply fixes
+15. Human review of translations (author's voice check)
+16. Run verification steps
 
 ## Open Questions
 
