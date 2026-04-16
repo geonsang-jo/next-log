@@ -37,14 +37,16 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const { resources, i18n } = await initTranslations();
+  const { resources, i18n } = await initTranslations(
+    cookies().get("lang")?.value
+  );
   const detectedLanguage =
     cookies().get("lang")?.value || i18n.language || i18nConfig.defaultLocale;
 
   return (
     <html suppressHydrationWarning lang={detectedLanguage}>
       <body>
-        <TranslationProvider resources={resources}>
+        <TranslationProvider lang={detectedLanguage} resources={resources}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Header />
             <div className="flex w-full justify-center">

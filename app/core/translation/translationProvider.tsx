@@ -6,17 +6,16 @@ import { createInstance } from "i18next";
 import initTranslations from "../../../i18n";
 
 interface TranslationProviderProps {
+  lang?: string;
   resources?: any;
 }
 
 // eslint-disable-next-line react/display-name
 const TranslationProvider = React.memo<
   PropsWithChildren<TranslationProviderProps>
->(({ children, resources }) => {
+>(({ children, lang, resources }) => {
   const i18n = createInstance();
-
-  initTranslations(i18n, resources);
-
+  initTranslations(lang, i18n, resources);
   return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
 });
 
