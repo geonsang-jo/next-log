@@ -1,42 +1,51 @@
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
 import { Post } from "~types/post";
 import { getAllPosts } from "~utils/posts";
-import i18nConfig from "../../next-i18next.config";
 import { Skeleton } from "~components/ui/skeleton";
 
-export const metadata: Metadata = {
-  title: "Posts",
-  description: "웹 개발과 기술에 대한 글 모음",
-  openGraph: {
-    title: "Posts | Geon log",
-    description: "웹 개발과 기술에 대한 글 모음",
-  },
+type Props = { params: { lang: string } };
+
+export function generateMetadata({ params }: Props): Metadata {
+  const lang = params.lang;
+  const description =
+    lang === "ko"
+      ? "웹 개발과 기술에 대한 글 모음"
+      : "A collection of writing on web development and technology";
+  return {
+    title: "Posts",
+    description,
+    openGraph: {
+      title: "Posts | Geon log",
+      description,
+    },
+    alternates: {
+      canonical: `/${lang}/posts`,
+      languages: {
+        ko: "/ko/posts",
+        en: "/en/posts",
+        "x-default": "/en/posts",
+      },
+    },
+  };
+}
+
+const getPosts = async (lang: string): Promise<Post[]> => {
+  return getAllPosts(lang);
 };
 
-const getPosts = async (): Promise<Post[]> => {
-  const cookieStore = cookies();
-  const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
-
-  const posts = getAllPosts(lang);
-
-  return posts;
-};
-
-const Article = async () => {
-  const posts = await getPosts();
-  const cookieStore = cookies();
-  const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
+const Article = async ({ params }: Props) => {
+  const lang = params.lang;
+  const posts = await getPosts(lang);
 
   const fomattedDate = (date: string) => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
     const formattedDateEn = dayjs(date).format("MMMM DD, YYYY");
-
-    return lang === "kr" ? formattedDateKr : formattedDateEn;
+    return lang === "ko" ? formattedDateKr : formattedDateEn;
   };
+
   return (
     <section className="flex pt-12 pb-14 w-[900px] m-auto">
       <ul className="flex flex-col gap-y-20">
@@ -48,7 +57,7 @@ const Article = async () => {
             className="group transition-transform ease-in-out duration-200 "
           >
             <Link
-              href={`/posts/${post.slug}`}
+              href={`/${lang}/posts/${post.slug}`}
               className="flex items-center gap-x-12"
             >
               {post.metadata.thumbnail && (

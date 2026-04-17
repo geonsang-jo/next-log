@@ -1,31 +1,24 @@
 import Image from "next/image";
-import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import dayjs from "dayjs";
 
-import { getPostBySlug, getAllPosts } from "~utils/posts";
+import { getPostBySlug, getAllPosts, getAvailableLocales } from "~utils/posts";
 import { MdxRenderer } from "~components/mdx/MdxRenderer";
 
-import { Post } from "../../../types/post";
-import i18nConfig from "../../../next-i18next.config";
+type Props = { params: { lang: string; slug: string } };
 
-const getPost = (slug: string | undefined, lang: string): Post => {
-  if (!slug || typeof slug !== "string") {
-    throw new Response("Not Found", { status: 404 });
-  }
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
 
-  return getPostBySlug(slug, lang);
-};
-
-const PostPage = async ({ params }: { params: { slug: string } }) => {
-  const cookieStore = cookies();
-  const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
-  const post = getPost(params.slug, lang);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
+const PostPage = async ({ params }: Props) => {
+  const { lang, slug } = params;
+  const post = getPostBySlug(slug, lang);
+  if (!post) notFound();
 
   const fomattedDate = (date: string) => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
     const formattedDateEn = dayjs(date).format("MMMM DD, YYYY");
-    return lang === "kr" ? formattedDateKr : formattedDateEn;
+    return lang === "ko" ? formattedDateKr : formattedDateEn;
   };
 
   const jsonLd = {
@@ -34,12 +27,13 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
     headline: post.metadata.title,
     description: post.metadata.description,
     datePublished: new Date(post.metadata.date).toISOString(),
+    inLanguage: lang === "ko" ? "ko-KR" : "en-US",
     author: {
       "@type": "Person",
       name: "Geon",
-      url: `${siteUrl}/resume`,
+      url: `${SITE_URL}/${lang}/resume`,
     },
-    url: `${siteUrl}/posts/${post.slug}`,
+    url: `${SITE_URL}/${lang}/posts/${post.slug}`,
   };
 
   return (
@@ -82,42 +76,53 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
     </>
   );
 };
+
 export default PostPage;
 
-type Props = {
-  params: { slug: string };
-};
-
 export async function generateMetadata({ params }: Props) {
-  const cookieStore = cookies();
-  const lang = cookieStore.get("lang")?.value || i18nConfig.defaultLocale;
-  const post = getPost(params.slug, lang);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
+  const { lang, slug } = params;
+  const post = getPostBySlug(slug, lang);
+  if (!post) return {};
+
+  const availableLocales = getAvailableLocales(slug);
 
   const highlightParam = post.metadata.highlightWord
     ? `&highlightWord=${encodeURIComponent(post.metadata.highlightWord)}`
     : "";
   const ogImageUrl = post.metadata.thumbnail
-    ? `${siteUrl}/posts/${params.slug}/${post.metadata.thumbnail}`
-    : `${siteUrl}/api/og/${params.slug}?title=${encodeURIComponent(
+    ? `${SITE_URL}/posts/${slug}/${post.metadata.thumbnail}`
+    : `${SITE_URL}/api/og/${slug}?title=${encodeURIComponent(
         post.metadata.title
       )}${highlightParam}`;
+
+  const languages: Record<string, string> = {};
+  if (availableLocales.includes("ko")) languages.ko = `/ko/posts/${slug}`;
+  if (availableLocales.includes("en")) languages.en = `/en/posts/${slug}`;
+  languages["x-default"] = availableLocales.includes("en")
+    ? `/en/posts/${slug}`
+    : `/ko/posts/${slug}`;
+
+  const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
+  const ogAlternate = lang === "ko" ? "en_US" : "ko_KR";
 
   return {
     title: post.metadata.title,
     description: post.metadata.description,
     authors: {
       name: "Geon",
-      url: `${siteUrl}/resume`,
+      url: `${SITE_URL}/${lang}/resume`,
     },
     alternates: {
-      canonical: `/posts/${params.slug}`,
+      canonical: `/${lang}/posts/${slug}`,
+      languages,
     },
     openGraph: {
       type: "article",
+      locale: ogLocale,
+      alternateLocale: ogAlternate,
       title: post.metadata.title,
       description: post.metadata.description,
-      url: `/posts/${params.slug}`,
+      url: `/${lang}/posts/${slug}`,
       publishedTime: new Date(post.metadata.date).toISOString(),
       authors: ["Geon"],
       images: [
@@ -139,6 +144,13 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export const generateStaticParams = async () => {
-  const posts = getAllPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  const locales = ["ko", "en"] as const;
+  const params: { lang: string; slug: string }[] = [];
+  for (const lang of locales) {
+    const posts = getAllPosts(lang);
+    for (const post of posts) {
+      params.push({ lang, slug: post.slug });
+    }
+  }
+  return params;
 };

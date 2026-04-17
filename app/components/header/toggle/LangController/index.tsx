@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
+import { usePathname, useRouter } from "next/navigation";
 import LangIcon from "~components/icon/langIcon";
 import { Button } from "~components/ui/button";
 import {
@@ -10,18 +10,16 @@ import {
   DropdownMenuTrigger,
 } from "~components/ui/dropdown-menu";
 import { Languages } from "~types/translation";
-import Cookies from "js-cookie";
 
 const LanguageSwitcher = () => {
-  const { i18n } = useTranslation();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  const changeLanguage = (locale: Languages) => {
-    if (locale && i18n.language === locale) return;
-
-    i18n.changeLanguage(locale);
-    document.documentElement.lang = locale;
-    Cookies.set("lang", locale, { expires: 365 });
-    window.location.reload();
+  const changeLanguage = (target: Languages) => {
+    const segments = pathname.split("/");
+    if (segments[1] === target) return;
+    segments[1] = target;
+    router.push(segments.join("/") || "/");
   };
 
   return (
@@ -38,7 +36,7 @@ const LanguageSwitcher = () => {
           </Button>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Button variant={"ghost"} onClick={() => changeLanguage("kr")}>
+          <Button variant={"ghost"} onClick={() => changeLanguage("ko")}>
             한국어
           </Button>
         </DropdownMenuItem>
