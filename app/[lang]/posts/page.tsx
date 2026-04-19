@@ -47,10 +47,8 @@ const Article = async ({ params }: Props) => {
   };
 
   return (
-    <section className="flex pt-12 pb-14 w-[900px] m-auto">
-      <ul className="flex flex-col gap-y-20">
-        <Skeleton className="w-240 h-240" />
-        <Skeleton className="w-240 h-240" />
+    <section className="flex pt-12 pb-14 w-full md:w-[900px] m-auto px-4 md:px-0">
+      <ul className="flex flex-col gap-y-10 md:gap-y-20">
         {posts.map((post) => (
           <li
             key={post.slug}
@@ -58,7 +56,7 @@ const Article = async ({ params }: Props) => {
           >
             <Link
               href={`/${lang}/posts/${post.slug}`}
-              className="flex items-center gap-x-12"
+              className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-x-12"
             >
               {post.metadata.thumbnail && (
                 <Image
@@ -66,15 +64,14 @@ const Article = async ({ params }: Props) => {
                   alt={`${post.slug} thumbnail`}
                   width={240}
                   height={240}
-                  className="rounded-[14px] object-cover group-hover:-translate-y-1 transition-transform ease-in-out duration-200"
-                  style={{ width: "240px", height: "240px" }}
+                  className="rounded-[14px] object-cover group-hover:-translate-y-1 transition-transform ease-in-out duration-200 w-full md:w-[240px] h-auto md:h-[240px]"
                 />
               )}
               <div className="flex flex-col">
-                <span className="text-4xl font-bold mb-3  transition-colors duration-300 ease-in-out group-hover:text-blue">
+                <span className="text-2xl md:text-4xl font-bold mb-3 transition-colors duration-300 ease-in-out group-hover:text-blue">
                   {post.metadata.title}
                 </span>
-                <span className="text-lg mb-2.5">
+                <span className="text-base md:text-lg mb-2.5">
                   {post.metadata.description}
                 </span>
                 <span className="text-sm text-slate-400">

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "~components/icon/logo";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 import MenuIcon from "~components/icon/menuIcon";
 import {
   Sheet,
@@ -21,6 +22,8 @@ function extractLang(pathname: string): "ko" | "en" {
 function NavSheet() {
   const pathname = usePathname();
   const lang = extractLang(pathname);
+  const { theme } = useTheme();
+  const logoSrc = theme === "dark" ? "/ge-logo-dark.png" : "/ge-logo-light.png";
 
   return (
     <Sheet>
@@ -31,22 +34,37 @@ function NavSheet() {
         <SheetHeader className="text-left">
           <SheetTitle>
             <Link className="flex items-center" href={`/${lang}/posts`}>
-              <Logo className="mr-2 h-4 w-4" />
-              <span className="font-bold">next log</span>
+              <Image src={logoSrc} alt="Geon" width={24} height={24} className="mr-2 rounded-md" />
+              <span className="font-bold">Geon</span>
             </Link>
           </SheetTitle>
           <SheetDescription className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
-            <div className="flex flex-col space-y-3">
-              <Link href={`/${lang}/posts`}>Posts</Link>
-              <Link href={`/${lang}/resume`}>Resume</Link>
-              <Link href="https://github.com/geonsang-jo" target="_blank">
+            <div className="flex flex-col space-y-4">
+              <Link
+                href={`/${lang}/posts`}
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Posts
+              </Link>
+              <Link
+                href={`/${lang}/resume`}
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Resume
+              </Link>
+              <Link
+                href="https://github.com/geonsang-jo"
+                target="_blank"
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
                 GitHub
               </Link>
               <Link
-                href={"https://www.linkedin.com/in/geonsang-jo-5a570612b/"}
+                href="https://www.linkedin.com/in/geonsang-jo-5a570612b/"
                 target="_blank"
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
               >
-                LinkdeIn
+                LinkedIn
               </Link>
             </div>
           </SheetDescription>
