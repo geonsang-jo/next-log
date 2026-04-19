@@ -25,17 +25,32 @@ function NavSheet() {
             </Link>
           </SheetTitle>
           <SheetDescription className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
-            <div className="flex flex-col space-y-3">
-              <Link href="/article">Article</Link>
-              <Link href="/resume">Resume</Link>
-              <Link href="https://github.com/Jogeonsang" target="_blank">
+            <div className="flex flex-col space-y-4">
+              <Link
+                href="/posts"
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Posts
+              </Link>
+              <Link
+                href="/resume"
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Resume
+              </Link>
+              <Link
+                href="https://github.com/Jogeonsang"
+                target="_blank"
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
                 GitHub
               </Link>
               <Link
-                href={"https://www.linkedin.com/in/geonsan-jo-5a570612b/"}
+                href="https://www.linkedin.com/in/geonsan-jo-5a570612b/"
                 target="_blank"
+                className="text-base font-medium text-foreground/80 hover:text-foreground transition-colors"
               >
-                LinkdeIn
+                LinkedIn
               </Link>
             </div>
           </SheetDescription>
