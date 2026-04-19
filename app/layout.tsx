@@ -1,6 +1,6 @@
 import "~styles/globals.css";
 import { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
