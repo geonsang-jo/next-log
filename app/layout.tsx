@@ -1,40 +1,23 @@
 import "~styles/globals.css";
-
 import { Metadata } from "next";
-import Header from "~components/header";
-import ThemeProvider from "~styles/themeProvider";
-import i18nConfig from "../next-i18next.config";
-import TranslationProvider from "~core/translation/translationProvider";
-import initTranslations from "../i18n";
-import { cookies } from "next/headers";
+import { Analytics } from "@vercel/analytics/react";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
 
 export const metadata: Metadata = {
-  title: "Marcus log",
-  description: "A blog about web development and other stuff",
+  metadataBase: new URL(SITE_URL),
+  verification: {
+    google: "IvtO23xqXBRCTsg8vvSstjRpZT-bQJ-6Z5620rO6gHU",
+  },
 };
 
-export function generateStaticParams() {
-  return i18nConfig.locales.map((locale) => ({ locale }));
-}
-
-const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const { resources, i18n } = await initTranslations();
-  const detectedLanguage =
-    cookies().get("lang")?.value || i18n.language || i18nConfig.defaultLocale;
-
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning lang={detectedLanguage}>
-      <body>
-        <TranslationProvider resources={resources}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Header />
-            <div className="flex w-full justify-center">
-              <main className="container relative lg:px-8">{children}</main>
-            </div>
-          </ThemeProvider>
-        </TranslationProvider>
-      </body>
-    </html>
+    <>
+      {children}
+      <Analytics />
+    </>
   );
 };
 

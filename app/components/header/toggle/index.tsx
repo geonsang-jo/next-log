@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -16,10 +17,13 @@ const LanguageSwitcher = dynamic(() => import("./LangController"), {
 });
 
 function NavToggles() {
-  const { theme = "dark", setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const changeTheme = () => {
-    if (theme === "dark") {
+    if (resolvedTheme === "dark") {
       setTheme("light");
     } else {
       setTheme("dark");
@@ -28,13 +32,13 @@ function NavToggles() {
 
   return (
     <nav className="flex items-center">
-      <Link href={"https://github.com/Jogeonsang"} target="_blank" passHref>
+      <Link href={"https://github.com/geonsang-jo"} target="_blank" passHref>
         <Button variant="ghost" className="w-9 shrink-0 px-0">
           <GithubIcon className="h-4 w-4" />
         </Button>
       </Link>
       <Link
-        href={"https://www.linkedin.com/in/geonsan-jo-5a570612b/"}
+        href={"https://www.linkedin.com/in/geonsang-jo-5a570612b/"}
         target="_blank"
         passHref
       >
@@ -48,7 +52,7 @@ function NavToggles() {
         className="w-9 shrink-0 px-0"
         onClick={changeTheme}
       >
-        {theme === "dark" ? (
+        {mounted && resolvedTheme === "dark" ? (
           <MoonIcon className="h-4 w-4" />
         ) : (
           <SunIcon className="h-4 w-4" />
