@@ -23,7 +23,7 @@ function PageNav() {
         href={`/${lang}/posts`}
         className="hidden md:flex mr-6 items-center space-x-2"
       >
-        <span className="font-bold sm:inline-block">Geon-log</span>
+        <span className="font-bold sm:inline-block">Geon</span>
       </Link>
       <nav className="hidden md:flex gap-6 items-center font-medium text-sm">
         <Link
