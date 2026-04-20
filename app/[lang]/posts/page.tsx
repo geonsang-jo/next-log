@@ -49,7 +49,7 @@ const Article = async ({ params }: Props) => {
   return (
     <section className="flex pt-12 pb-14 w-full md:w-[900px] m-auto px-4 md:px-0">
       <ul className="flex flex-col gap-y-10 md:gap-y-20">
-        {posts.map((post) => (
+        {posts.map((post, index) => (
           <li
             key={post.slug}
             className="group transition-transform ease-in-out duration-200 "
@@ -64,6 +64,7 @@ const Article = async ({ params }: Props) => {
                   alt={`${post.slug} thumbnail`}
                   width={240}
                   height={240}
+                  priority={index === 0}
                   className="rounded-[14px] object-cover group-hover:-translate-y-1 transition-transform ease-in-out duration-200 w-full md:w-[240px] h-auto md:h-[240px]"
                 />
               )}
