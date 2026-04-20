@@ -8,6 +8,9 @@ module.exports = {
     "./src/**/*.{ts,tsx,md,mdx}",
   ],
   theme: {
+  	fontFamily: {
+  		sans: ['var(--font-pretendard)', 'system-ui', 'sans-serif'],
+  	},
   	fontSize: {
   		'4xl': [
   			'36px',

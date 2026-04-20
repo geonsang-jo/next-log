@@ -1,9 +1,17 @@
 import { Metadata } from "next";
+import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import Header from "~components/header";
 import ThemeProvider from "~styles/themeProvider";
 import TranslationProvider from "~core/translation/translationProvider";
 import initTranslations from "../../i18n";
+
+const pretendard = localFont({
+  src: "../fonts/PretendardVariable.woff2",
+  display: "swap",
+  weight: "45 920",
+  variable: "--font-pretendard",
+});
 
 const SUPPORTED_LOCALES = ["ko", "en"] as const;
 type Locale = (typeof SUPPORTED_LOCALES)[number];
@@ -70,8 +78,8 @@ const LangLayout = async ({
   const { resources } = await initTranslations(lang);
 
   return (
-    <html suppressHydrationWarning lang={lang}>
-      <body>
+    <html suppressHydrationWarning lang={lang} className={pretendard.variable}>
+      <body className={pretendard.className}>
         <TranslationProvider lang={lang} resources={resources}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Header />

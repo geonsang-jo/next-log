@@ -1,5 +1,3 @@
-"use client";
-
 import NavToggles from "./toggle";
 import PageNav from "./nav";
 

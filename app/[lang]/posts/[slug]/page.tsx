@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 
 import { getPostBySlug, getAllPosts, getAvailableLocales } from "~utils/posts";
 import { MdxRenderer } from "~components/mdx/MdxRenderer";
+import "~styles/prism.css";
 
 type Props = { params: { lang: string; slug: string } };
 
@@ -50,10 +51,11 @@ const PostPage = async ({ params }: Props) => {
               src={`/posts/${post.slug}/${post.metadata.thumbnail}`}
               alt="post_thumbnail"
               className="rounded-[14px]"
-              sizes="100vw"
+              sizes="(max-width: 1000px) 100vw, 1000px"
               style={{ width: "100%", height: "auto" }}
               width={0}
               height={0}
+              priority
             />
           )}
           <p>
