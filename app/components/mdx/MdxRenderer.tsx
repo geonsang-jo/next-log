@@ -5,6 +5,7 @@ import rehypePrism from "rehype-prism-plus";
 import rehypeExternalLinks from "rehype-external-links";
 // @ts-ignore
 import rehypeAddClasses from "rehype-add-classes";
+import remarkGfm from "remark-gfm";
 import { mdxComponents } from "./index";
 
 interface MdxRendererProps {
@@ -18,7 +19,7 @@ export function MdxRenderer({ source }: MdxRendererProps) {
       components={mdxComponents}
       options={{
         mdxOptions: {
-          remarkPlugins: [],
+          remarkPlugins: [remarkGfm],
           rehypePlugins: [
             rehypeSlug,
             [rehypeAddClasses, { "h1,h2": "heading" }],
