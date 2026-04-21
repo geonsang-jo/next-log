@@ -9,7 +9,7 @@ import remarkToc from "remark-toc";
 export const parseToc = (source: string) => {
   return source
     .split("\n")
-    .filter((line) => line.match(/(^#{1,3})\s/))
+    .filter((line) => line.match(/(^#{2})\s/))
     .reduce<TableOfContents>((ac, rawHeading) => {
       const nac = [...ac];
       const removeMdx = rawHeading

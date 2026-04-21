@@ -4,6 +4,9 @@ import dayjs from "dayjs";
 
 import { getPostBySlug, getAllPosts, getAvailableLocales } from "~utils/posts";
 import { MdxRenderer } from "~components/mdx/MdxRenderer";
+import { parseToc } from "~core/blog/serializeMdx";
+import TableOfContents from "~components/toc/TableOfContents";
+import "~styles/prism.css";
 
 type Props = { params: { lang: string; slug: string } };
 
@@ -14,6 +17,8 @@ const PostPage = async ({ params }: Props) => {
   const { lang, slug } = params;
   const post = getPostBySlug(slug, lang);
   if (!post) notFound();
+
+  const toc = parseToc(post.content);
 
   const fomattedDate = (date: string) => {
     const formattedDateKr = dayjs(date).format("YYYY년 MM월 DD일");
@@ -60,7 +65,8 @@ const PostPage = async ({ params }: Props) => {
             {post.metadata.category} | {fomattedDate(post.metadata.date)}
           </p>
         </div>
-        <div className="max-w-[800px] m-auto">
+        <div className="relative max-w-[800px] m-auto">
+          <TableOfContents toc={toc} />
           <div className="flex-col my-12">
             <h3
               dangerouslySetInnerHTML={{ __html: post.metadata.introTitle }}
