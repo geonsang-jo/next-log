@@ -6,9 +6,9 @@ function ResumeExprience() {
       <h1>Exprience</h1>
       {resumeInfo.experience.map((exp, index) => (
         <ul className="list-none p-0" key={index}>
-          <li className="flex p-0  gap-4">
-            <div className="relative flex-[3_1_0%] pr-4">
-              <div className="sticky top-[80px]">
+          <li className="flex flex-col md:flex-row p-0 gap-4">
+            <div className="relative flex-none md:flex-[3_1_0%] pr-0 md:pr-4">
+              <div className="md:sticky md:top-[80px]">
                 <h3 className="mt-0">{exp.company}</h3>
                 <h4 className="mt-0">{exp.period}</h4>
                 <h4 className="mt-0">{exp.position}</h4>

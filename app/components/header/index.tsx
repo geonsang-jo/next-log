@@ -1,5 +1,3 @@
-"use client";
-
 import NavToggles from "./toggle";
 import PageNav from "./nav";
 
@@ -10,7 +8,7 @@ function Header() {
         <div className="md:flex">
           <PageNav />
         </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+        <div className="flex flex-1 items-center justify-end space-x-2">
           <NavToggles />
         </div>
       </div>
