@@ -237,39 +237,42 @@ However, there’s still no definitive answer, and many ponder questions like, �
 
 In our process, we concluded there’s no right answer and that we should design a structure that best suits how Wanted-Insight works.
 
-```text
-└── src/
-├── hooks/
-├── utils/
-├── store/
-├── components/
-│ ├── Button/
-│ ├── Text/
-│ ├── Modal/
-│ ├── CheckBox/
-│ └── Input/
-│
-├── features/
-│ ├── Home/
-│ │ Layout/
-│ │ ├── SideNavigation/
-│ │ ├── NestedSection/
-│ │ └── SearchBar/
-│ ├── KreditJob/
-│ │ ├── hooks/
-│ │ ├── SalarySection/
-│ │ ├── SalesSection/
-│ │ ├── EmployeeSection/
-│ │ └── ...
-│ ├── Watend-gigs/
-│ └── Wanted/
-│
-└── pages/
-├── Watend-gigs/
-├── Watend/
-├── KreditJob/
-└── ...
-```
+<FileTree>
+  <Folder name="src" defaultOpen>
+    <Folder name="hooks" />
+    <Folder name="utils" />
+    <Folder name="store" />
+    <Folder name="components" defaultOpen>
+      <Folder name="Button" />
+      <Folder name="Text" />
+      <Folder name="Modal" />
+      <Folder name="CheckBox" />
+      <Folder name="Input" />
+    </Folder>
+    <Folder name="features" defaultOpen>
+      <Folder name="Home" defaultOpen>
+        <Folder name="Layout" defaultOpen>
+          <Folder name="SideNavigation" />
+          <Folder name="NestedSection" />
+          <Folder name="SearchBar" />
+        </Folder>
+      </Folder>
+      <Folder name="KreditJob" defaultOpen>
+        <Folder name="hooks" />
+        <Folder name="SalarySection" />
+        <Folder name="SalesSection" />
+        <Folder name="EmployeeSection" />
+      </Folder>
+      <Folder name="Wanted-gigs" />
+      <Folder name="Wanted" />
+    </Folder>
+    <Folder name="pages" defaultOpen>
+      <Folder name="Wanted-gigs" />
+      <Folder name="Wanted" />
+      <Folder name="KreditJob" />
+    </Folder>
+  </Folder>
+</FileTree>
 
 We designed our folder structure with two main concepts:
 
