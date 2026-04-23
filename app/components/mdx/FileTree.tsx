@@ -178,9 +178,8 @@ function FileTree({ children }: FileTreeProps) {
       <div
         className="relative mx-auto max-w-xs overflow-hidden rounded-xl"
         style={{
-          backgroundColor: "hsl(var(--background) / 0.6)",
-          backdropFilter: "blur(16px)",
-          boxShadow: "0 0 0 1px hsl(var(--border) / 0.3), 0 2px 12px hsl(var(--foreground) / 0.04), 0 8px 32px hsl(var(--foreground) / 0.06)",
+          backgroundColor: "hsl(var(--background))",
+          boxShadow: "0 0 0 1px hsl(var(--border) / 0.4), 0 4px 24px hsl(0 0% 100% / 0.03)",
         }}
       >
         <DepthContext.Provider value={0}>{children}</DepthContext.Provider>
