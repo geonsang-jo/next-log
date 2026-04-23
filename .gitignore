@@ -2,11 +2,19 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-.pnp.cjs
-.pnp.loader.mjs
-.yarn/
+
+# Yarn PnP (Zero-Install)
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Large cache files (exceed GitHub 100MB limit, fetched on install)
+.yarn/cache/@next-swc-*
+.yarn/cache/next-npm-*
 
 # testing
 /coverage
