@@ -18,17 +18,17 @@ module.exports = withMDX({
       {
         source: "/posts",
         destination: "/ko/posts",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/posts/:slug*",
         destination: "/ko/posts/:slug*",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/resume",
         destination: "/ko/resume",
-        permanent: false,
+        permanent: true,
       },
     ];
   },

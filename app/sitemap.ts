@@ -14,6 +14,7 @@ function buildPostAlternates(slug: string): Record<string, string> {
   for (const locale of available) {
     languages[locale] = `${SITE_URL}/${locale}/posts/${slug}`;
   }
+  languages["x-default"] = `${SITE_URL}/en/posts/${slug}`;
   return languages;
 }
 
@@ -32,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: {
           ko: `${SITE_URL}/ko/posts`,
           en: `${SITE_URL}/en/posts`,
+          "x-default": `${SITE_URL}/en/posts`,
         },
       },
     });
@@ -48,6 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: {
           ko: `${SITE_URL}/ko/resume`,
           en: `${SITE_URL}/en/resume`,
+          "x-default": `${SITE_URL}/en/resume`,
         },
       },
     });
