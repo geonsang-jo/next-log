@@ -24,9 +24,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
-  const lang = params.lang as Locale;
+  const { lang: rawLang } = await params;
+  const lang = rawLang as Locale;
   if (!SUPPORTED_LOCALES.includes(lang)) return {};
 
   const ogLocale = lang === "ko" ? "ko_KR" : "en_US";
@@ -71,9 +72,10 @@ const LangLayout = async ({
   params,
 }: {
   children: React.ReactNode;
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }) => {
-  const lang = params.lang as Locale;
+  const { lang: rawLang } = await params;
+  const lang = rawLang as Locale;
   if (!SUPPORTED_LOCALES.includes(lang)) notFound();
 
   const { resources } = await initTranslations(lang);
