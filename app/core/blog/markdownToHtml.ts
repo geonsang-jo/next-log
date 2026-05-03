@@ -1,5 +1,3 @@
-// @ts-ignore
-import rehypeAddClasses from "rehype-add-classes";
 import rehypeCodeTitles from "rehype-code-titles";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypePrism from "rehype-prism-plus";
@@ -16,7 +14,6 @@ export default async function markdownToHtml(markdown: string) {
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeSlug)
-    .use(rehypeAddClasses, { "h1,h2": "heading" })
     .use(rehypeCodeTitles)
     .use(rehypePrism, { ignoreMissing: true })
     .use(rehypeExternalLinks, {
