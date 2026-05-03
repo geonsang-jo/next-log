@@ -8,13 +8,13 @@ import { parseToc } from "~core/blog/serializeMdx";
 import TableOfContents from "~components/toc/TableOfContents";
 import "~styles/prism.css";
 
-type Props = { params: { lang: string; slug: string } };
+type Props = { params: Promise<{ lang: string; slug: string }> };
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://if-geon.xyz";
 
 const PostPage = async ({ params }: Props) => {
-  const { lang, slug } = params;
+  const { lang, slug } = await params;
   const post = getPostBySlug(slug, lang);
   if (!post) notFound();
 
@@ -87,7 +87,7 @@ const PostPage = async ({ params }: Props) => {
 export default PostPage;
 
 export async function generateMetadata({ params }: Props) {
-  const { lang, slug } = params;
+  const { lang, slug } = await params;
   const post = getPostBySlug(slug, lang);
   if (!post) return {};
 
