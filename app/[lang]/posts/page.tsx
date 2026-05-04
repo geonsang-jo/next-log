@@ -6,10 +6,10 @@ import { Post } from "~types/post";
 import { getAllPosts } from "~utils/posts";
 import { Skeleton } from "~components/ui/skeleton";
 
-type Props = { params: { lang: string } };
+type Props = { params: Promise<{ lang: string }> };
 
-export function generateMetadata({ params }: Props): Metadata {
-  const lang = params.lang;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { lang } = await params;
   const description =
     lang === "ko"
       ? "웹 개발과 기술에 대한 글 모음"
@@ -37,7 +37,7 @@ const getPosts = async (lang: string): Promise<Post[]> => {
 };
 
 const Article = async ({ params }: Props) => {
-  const lang = params.lang;
+  const { lang } = await params;
   const posts = await getPosts(lang);
 
   const fomattedDate = (date: string) => {
