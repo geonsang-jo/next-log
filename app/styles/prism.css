@@ -35,7 +35,7 @@ pre {
 }
 
 /* lab(47.8876% 63.025 42.31 */
-code {
+:not(pre) > code {
   background: var(--code-inline-highlight-background);
   border: 1px solid var(--code-inline-highlight-border);
   padding: 0.125rem 0.25em;
