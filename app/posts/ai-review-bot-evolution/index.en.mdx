@@ -16,6 +16,8 @@ After we adopted AI coding tools, our team's development speed picked up in a no
 
 PRs started landing faster, but the reviewers were still the same people. Naturally, the review queue piled up, and **review became a deployment bottleneck** over and over. Situations like "I wrote the code in 30 minutes, but the review took a day" became the norm.
 
+In fact, before the review bot, our team's median PR merge time was 14.8 hours, and each PR received an average of just 0.9 comments.
+
 ### The Burden Concentrated on Individual Reviewers
 
 As the number of PRs to review grew, the burden each human reviewer had to shoulder grew too. If I was slow to review, my colleague's deploy got delayed, and testing got delayed. That pressure either dropped the quality of reviews or piled fatigue onto the reviewer.
@@ -51,6 +53,8 @@ Let me share what problem we hit in each Phase and why we made the choices we ma
   Once the review bot was running and comments piled up on PRs, it actually stopped helping teammates review — it started hurting.
 
   The bot was **duplicating things the framework or compiler already catches**, like useEffect dependency warnings or TypeScript type issues. From the PR author's perspective, they had to review things they shouldn't have needed to review, leave replies, or resolve comments. There were times a single PR ended up with 20–30 meaningless comments on it.
+
+  At this point, bot comments averaged 2.2 per PR — more than human comments (1.7). The problem was that these weren't substantive code reviews but unnecessary ones: suggestions that missed the code's context, UX-related nitpicks, and duplicate flags on areas the compiler already covered. Comments per PR also exploded from 0.9 to 3.9 — over 4x — but this wasn't because meaningful reviews or discussions increased; the bot was flooding PRs with low-value comments, inflating the count.
 
   Another problem was that **just a rebase would trigger a fresh round of reviews**. When no code changed but the same comments reappeared after a rebase, trust dropped.
 
@@ -104,6 +108,8 @@ Let me share what problem we hit in each Phase and why we made the choices we ma
 
   On top of that, the validator does post-processing: converting imperative phrasing into questions ("Do X" → "Is there a reason you did X?"), capping comments at seven max, and keeping only the single most important one among similar comments.
 
+  The results were clear in the numbers. Bot comments per PR dropped from 2.2 to 1.0 — less than half — and comments per PR stabilized from 3.9 to 2.1, roughly half. A completely different picture from the flood of unnecessary reviews in P2.
+
   > The 2-pass structure goes beyond just reducing noise — it **shifts the perspective of the review**. From "does the code follow the rules?" to "is this feedback valuable to the author?"
 
   </TimelineItem>
@@ -151,15 +157,65 @@ Before the review bot, human reviewers had to look at everything — type mistak
 
 One of the interesting shifts is that **the bypass (fast-track approval) pattern started being used heavily**. For PRs where the bot had already finished its basic checks, a pattern naturally settled in of human reviewers quickly confirming and approving. Because the bot had already checked "is anything missed?" once, the human reviewer no longer needed to comb through the whole thing — they could focus only on what the bot flagged and on the business logic.
 
+In numbers, the bypass rate climbed to 83% after stabilization. This wasn't just "skipping review" — the data backs it up:
+
+- **Everyone on the team bypassed evenly** — it became a team culture, not one person's habit
+- **Large PRs (500+ lines) still got human review** — 32% of Approved PRs were 500+ lines, showing healthy judgment
+- **Bypass hit 92–100% during off-hours** — the bot served as a first safety net regardless of time zone
+- **53% of bypassed PRs had actual edits on files the bot flagged** — direct evidence that code quality improved even without a human reviewer
+
 ### Shorter Review Wait Times
 
 It meshed well with the TBD flow too. Bot reviews run the moment a PR is opened, so they're time-zone-independent. Even when human reviewers are offline, you can get basic feedback right away, and by the time the reviewer is back, the bot has already finished the basic checks, so review time dropped significantly.
 
 ---
 
+## Overall Results: Three Months in Numbers
+
+We measured three periods — before the bot (P1), early adoption (P2), and stabilization (P3) — using the GitHub API.
+
+**Key Metric Changes (P1 → P3)**
+
+| Metric | No Bot (P1) | Early Adoption (P2) | Stabilized (P3) | Change |
+|---|---|---|---|---|
+| Median Merge Time | 14.8h | 13.0h | **1.2h** | **-92%** |
+| Bot Comments / PR | 0.1 | 2.2 | **1.0** | Stabilized after noise removal |
+| Comments / PR | 0.9 | 3.9 | **2.1** | -46% vs P2 (noise removal) |
+| Bypass Merge Rate | 32% | 53% | **83%** | Shift in review ownership |
+
+The standout is median merge time dropping from 14.8 hours to 1.2 hours — a 92% reduction. The median shift is far more dramatic than the mean (24.9 → 15.6), which means **"most PRs merge fast."** A fast-merge culture aligned with TBD took hold.
+
+**Comparison With Industry Benchmarks**
+
+According to [Faros AI's research](https://www.faros.ai/blog/ai-software-engineering) (10,000+ developers, 1,255 teams), after AI adoption most teams see a **91% increase in review time**. PRs multiply, yet the review bottleneck gets worse — a paradox. Faros AI explains this through **Amdahl's Law** — "a system moves only as fast as its slowest link."
+
+| Metric | Industry Average | Our Team |
+|---|---|---|
+| PR Merge Count Change | +98% ([Faros AI](https://www.faros.ai/blog/ai-software-engineering)) | **+93%** |
+| PR Cycle Time | -24% ([Jellyfish](https://jellyfish.co/blog/what-data-from-20-million-pull-requests-reveal-about-ai-transformation/)) | **-37%** |
+| Review Time Change | +91% increase ([Faros AI](https://www.faros.ai/blog/ai-software-engineering)) | **-16% decrease** |
+
+In an industry where review bottlenecks are getting worse, our team used the review bot to **automate that slowest link** and break through the paradox.
+
+**FE Incident Trend**
+
+<strong>"We merged fast — but was quality okay?"</strong> The FE incident data answers that directly.
+
+| Period | Incident / PR |
+|---|---|
+| **P1** (No Bot) | 3.4% |
+| **P2** (Early Adoption) | 1.8% |
+| **P3** (Stabilized) | **0.9%** |
+
+PRs doubled and bypass climbed to 83%, yet the incident-to-PR ratio improved from 3.4% to 0.9% — roughly **a 3.8x improvement**. Direct evidence that faster reviews did not lead to lower quality.
+
+---
+
 ## Wrapping Up
 
 The biggest thing I learned across these seven major iterations is that <strong>an AI review bot isn't "an AI that reads code well" — it's "a feedback system that fits the team's culture."</strong>
+
+If all we'd gained was faster merges, it wouldn't have meant much. No matter how fast you merge, it's pointless if quality drops. But looking at three months of data, PRs doubled and bypass reached 83%, yet the incident-to-PR rate actually fell from 3.4% to 0.9%. Fast and safe — the data proved both are possible.
 
 It wasn't about just editing prompts or yml files. What mattered was defining <strong>"what kind of review is valuable to the team,"</strong> and that definition came out of the team's reaction data. In the end, I think a good review bot is a reflection of a good review culture.
 
