@@ -100,7 +100,7 @@ const LangLayout = async ({
                 lang === "ko"
                   ? "웹 개발과 기타 주제에 관한 블로그"
                   : "A blog about web development and other stuff",
-              url: "https://if-geon.xyz",
+              url: "https://www.if-geon.xyz",
             }),
           }}
         />
