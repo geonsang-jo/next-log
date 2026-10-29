@@ -23,8 +23,7 @@ module.exports = withMDX({
     // Default to /ko since these URLs were the original Korean blog paths
     // before the URL refactor; existing readers + cached browser redirects
     // landing here are most likely Korean speakers.
-    // permanent: false (307) so this can be removed later without lingering
-    // browser cache problems.
+    // Permanent redirects preserve canonical URLs for these legacy pages.
     return [
       {
         source: "/posts",
@@ -32,8 +31,8 @@ module.exports = withMDX({
         permanent: true,
       },
       {
-        source: "/posts/:slug*",
-        destination: "/ko/posts/:slug*",
+        source: "/posts/:slug",
+        destination: "/ko/posts/:slug",
         permanent: true,
       },
       {
