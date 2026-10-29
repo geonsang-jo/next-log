@@ -47,8 +47,8 @@ const Article = async ({ params }: Props) => {
   };
 
   return (
-    <section className="flex pt-12 pb-14 w-full md:w-[900px] m-auto px-4 md:px-0">
-      <ul className="flex flex-col gap-y-10 md:gap-y-20">
+    <section className="flex pt-12 pb-14 w-full max-w-[900px] m-auto px-4 md:px-0">
+      <ul className="flex w-full flex-col gap-y-10 md:gap-y-20">
         {posts.map((post, index) => (
           <li
             key={post.slug}
@@ -56,26 +56,32 @@ const Article = async ({ params }: Props) => {
           >
             <Link
               href={`/${lang}/posts/${post.slug}`}
-              className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-x-12"
+              className={
+                post.metadata.thumbnail
+                  ? "grid grid-cols-1 items-stretch gap-4 md:grid-cols-[240px_minmax(0,1fr)] md:gap-x-12"
+                  : "block"
+              }
             >
               {post.metadata.thumbnail && (
-                <Image
-                  src={`/posts/${post.slug}/${post?.metadata.thumbnail ?? ""}`}
-                  alt={`${post.slug} thumbnail`}
-                  width={240}
-                  height={240}
-                  priority={index === 0}
-                  className="rounded-[14px] object-cover group-hover:-translate-y-1 transition-transform ease-in-out duration-200 w-full md:w-[240px] h-auto md:h-[240px]"
-                />
+                <div className="relative aspect-video w-full overflow-hidden rounded-[14px] group-hover:-translate-y-1 transition-transform ease-in-out duration-200 md:aspect-auto">
+                  <Image
+                    src={`/posts/${post.slug}/${post.metadata.thumbnail}`}
+                    alt={`${post.slug} thumbnail`}
+                    fill
+                    sizes="(min-width: 768px) 240px, calc(100vw - 4rem)"
+                    priority={index === 0}
+                    className="object-cover"
+                  />
+                </div>
               )}
-              <div className="flex flex-col">
-                <span className="text-2xl md:text-4xl font-bold mb-3 transition-colors duration-300 ease-in-out group-hover:text-blue">
+              <div className="flex min-w-0 flex-col">
+                <span className="break-keep text-[20px] leading-[1.4] md:text-4xl font-bold mb-3 transition-colors duration-300 ease-in-out group-hover:text-blue">
                   {post.metadata.title}
                 </span>
-                <span className="text-base md:text-lg mb-2.5">
+                <span className="line-clamp-2 text-base leading-6 md:text-lg mb-2.5">
                   {post.metadata.description}
                 </span>
-                <span className="text-sm text-slate-400">
+                <span className="text-[14px] leading-5 text-slate-400">
                   {fomattedDate(post.metadata.date)}
                 </span>
               </div>

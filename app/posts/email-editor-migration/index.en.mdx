@@ -1,0 +1,93 @@
+---
+title: "Better a Known Struggle Than an Uncertain One: Building Our Own Email Editor"
+date: "2026-10-29"
+description: "How we designed an email editor's rendering system and completed the migration, including all existing email designs"
+author: "Geon"
+thumbnail: "thumbnail.png"
+introTitle: "Moving Every Existing Email Design to Our Own Editor"
+introDesc: "A look at how we built an email editor at Datarize and completed the transition from our legacy editor."
+category: "Engineering"
+---
+
+## Why Did We Need a New Email Editor?
+
+Datarize's email editor was built on an older version of Unlayer.
+
+We were sending tens of millions of emails each month, but the editor wasn't reliable enough.
+
+Email became an important part of Datarize's expansion into Japan, but the editor wasn't ready to support it. We needed to work with multiple platforms and build custom components for our product.
+
+To build those components, developers first had to understand Unlayer itself. We also had limited control over how we handled differences between email platforms.
+
+Pricing was another consideration. Adding the features we wanted, customizing the editor, and upgrading existing features would have required a higher plan that cost more than twice what we were paying.
+
+At the time, we didn't think we needed to move up to that plan for what we wanted to do. Building on open source seemed like a way to take control of platform-specific support and shape the editor around Datarize's users.
+
+## Knowing Where to Start and What to Aim For
+
+We had decided to build our own editor, but we couldn't give users something less capable than what they already had.
+
+Our starting point was a feature specification for the new editor, put together by our PM. As I worked through its roughly 100 items, I started to think we could build it ourselves.
+
+The goal was to support every feature we already offered Datarize users, provide a better editing experience, and support all the email platforms our customers in Japan used.
+
+We added one more requirement: development shouldn't become a bottleneck when we needed to extend the editor. Alongside moving existing features over, we thought about how we would add new ones later.
+
+Having more features doesn't necessarily make it easier to create the email you want. Defaults, the order of settings, and the way users select products and coupons all shape the editing experience. Designing the editor ourselves would let us make those choices around our users.
+
+With that in mind, let's get into the implementation.
+
+## Bringing GrapesJS and MJML Together in One Editor
+
+We needed to decide which technologies to use and how to connect them into an editor.
+
+We chose GrapesJS and MJML, both actively maintained, as the foundations for editing and generating email HTML. We then connected them to Datarize's product and coupon features and the workflow for creating email designs.
+
+GrapesJS manages the editing model, including block structure, attributes, and styles, and provides editing operations such as selection and undo. MJML expresses email layouts and styles in its own markup and converts that markup into email HTML.
+
+Here's how the current implementation divides those responsibilities.
+
+| Area | Responsibility |
+| --- | --- |
+| React UI | Block list, property panels, toolbar, and the steps for creating an email design |
+| GrapesJS | Structure, attributes, and styles of the blocks being edited, along with selection and undo |
+| MJML | Source representation for reopening and editing a design, and conversion to email HTML |
+| Custom rendering layer | Updating child structures and the canvas DOM in response to model changes |
+
+The GrapesJS component model is the source of truth for the design being edited. React property panels subscribe to that model to display values and write user input back to it. Zustand manages the design's name, subject line, and current step. When users move on from the design step to the next step, we save the editing result; when they return, we load the saved MJML. This separates the editing model from the state that manages the creation workflow.
+
+## From a Flickering Prototype to a Custom Renderer
+
+A colleague built the initial prototype, and we worked through the design together as it developed. One issue stood out: the content flickered when it changed. Each update destroyed and rebuilt the affected HTML structure, making it difficult for users to follow their edits smoothly.
+
+It reminded me of how React applies changes to the screen. As described in [React's explanation of render and commit](https://react.dev/learn/render-and-commit), the idea is to work out what has changed and apply the necessary updates. That approach inspired the renderer I built for our email editor.
+
+The current implementation makes two kinds of comparisons. First, when the settings of a custom block, such as a product or coupon block, change, it compares the required child structure with the existing GrapesJS model tree. If components at matching positions have the same type and number of children, it updates the existing models' attributes and content. If the structure differs, it rebuilds that part.
+
+To update the canvas, it compiles the MJML to HTML, parses the result into a temporary DOM, and compares it with the existing DOM. It skips unchanged subtrees. Where tags match, it updates attributes, children, and text; where the structure doesn't match, it replaces the affected part.
+
+We also needed to preserve text that users were still editing. What they had typed on screen could be slightly ahead of the model, so we wrote that input back to the model before redrawing and prevented unnecessary rerenders. Keeping the screen structure in place mattered, but so did preserving the text someone had just entered.
+
+Some changes to structure or layout conditions still require rebuilding. Rather than trying to eliminate every rebuild, we focused on keeping the models and DOM nodes we could reuse. As we reduced unnecessary rebuilds, the flickering also seemed to improve.
+
+## Contributing Improvements to Open Source
+
+While building the email editor, I discovered that file filters weren't being applied to drag-and-drop uploads in GrapesJS's AssetManager. The same problem had already been [reported as an issue](https://github.com/GrapesJS/grapesjs/issues/6032), so I submitted [a PR to fix the file filtering](https://github.com/GrapesJS/grapesjs/pull/6778), which was merged. I also contributed [stronger type guards in DataSources](https://github.com/GrapesJS/grapesjs/pull/6773), and that change was merged too.
+
+I also submitted [a PR to improve image rendering](https://github.com/GrapesJS/mjml/pull/432) to `grapesjs-mjml`, the MJML plugin for GrapesJS. When the attributes or styles of an `mj-image` change, the proposed implementation compares and updates the existing DOM instead of replacing all its child nodes, aiming to reduce image reloads and flickering. At the time of writing, this PR is still open.
+
+It was rewarding to be able to fix a problem we encountered while building the product and contribute that improvement back to the open-source project.
+
+## Preserving Design Context for the Next Developer
+
+For the editor to keep improving after we built it, other developers needed to understand the context behind its design. We were also aware that an editor built in-house at a small startup could become a new source of technical debt over time.
+
+We documented our technical choices and component designs in specifications and plans in the FE Brain repository. Those documents recorded both the structure we built and the requirements and considerations that led us to choose it.
+
+We wanted another developer taking over the editor or adding a feature to be able to understand its current structure and the reasons behind it. Recording our reasoning also mattered so that those decisions could be revisited when requirements changed.
+
+## Completing the Migration, Including Existing Designs
+
+By October 1, we had converted every email design created in the old Unlayer editor into a design for the new editor. That completed the transition to our own editor, including all existing designs, and brought us to the migration goal we had set at the start.
+
+The work began with constraints around operating and extending the editor, but building it gave us a chance to think through the editing experience, rendering architecture, and ongoing maintenance together. Designing and improving the features and editing workflow for Datarize's users around the world was a rewarding experience, and I wanted to share a brief account of that process here.
